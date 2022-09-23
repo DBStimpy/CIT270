@@ -1,6 +1,10 @@
-const express = require('express');
+const express = require("express");
+const bodyParser = require("body-parser");
+const {v4 : uuidv4} = require("uuid");
 const port = 3000;
 const app = express();
+
+app.use(bodyParser.json());
 
 
 app.listen(port, async ()=>{
@@ -8,6 +12,10 @@ app.listen(port, async ()=>{
 });
 
 
-// app.get('/', (req,res)=>{
-//      res.send('Hello World!')    
-// });
+app.get("/", (req,res)=>{
+    res.send("Hello World!")    
+});
+
+app.post("/login", (req,res)=>{
+    
+})
