@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 app.listen(port, async ()=>{
     await redisClient.connect();
-    console.log('Listening on port ',port);
+    console.log('Listening on port ',+ port);
 });
 
 
@@ -25,26 +25,29 @@ app.get("/", (req,res)=>{
     res.send("Hello World!")    
 });
 
-app.post("/login", (req,res)=>{
-
-});
 
 app.post('/user',(req,res)=>{
-    const newUserRequestObject = eq.body;
-    comsole.log('New User:', JSON.stringify(newUserRequestObject));
+    const newUserRequestObject = req.body;
+    console.log('New User:', JSON.stringify(newUserRequestObject));
     redisClient.hSet('users',req.body.email,JSON.stringify(newUserRequestObject));
     res.send("New user added"+newUserRequestObject.email+" added");    
 });
 
-app.post('/login', (req,res)=>{
+app.post('/login', async (req,res)=>{
     const loginEmail = req.body.userName;
     console.log(JSON.stringify(req.body));
     console.log("loginEmail", loginEmail);
     const loginPassword = req.body.password;
-    console.log("loginPassword", loginpassword);
+    console.log("loginPassword", loginPassword);
     // res.sendStatus("Who are you"); //
 
-if (loginEmail == "gary@test.com" && loginPassword == "Bruh#1"){
+    const userString=await redisClient.hGet('users', loginEmail);
+    const userObject=JSON.parse(userString)
+    if(userString=='' || userString==null){
+        res.status(404);
+        res.send('User not found');
+    } 
+else if (loginEmail == userObject.userName && loginPassword == userObject.password){
         const token = uuidv4();
         res.send(token);
     } else{
