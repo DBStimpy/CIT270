@@ -5,7 +5,8 @@ const port = 3000;
 const app = express();
 const md5 = require('md5');
 const {createClient} = require('redis');
-const { fstat } = require('fs');
+const fs  = require('fs');
+const https = require('https');
 const redisClient = createClient(
 {
     Url:'redis://default@localhost:6379',
