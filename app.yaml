@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dallincit270
+  namespace: default
+  labels:
+    app: dallincit270
+spec:
+  containers:
+  - image: sti1901/cit270
+    volumeMounts:
+    - name: ssl
+      mountPath: "/usr/src/app/SSL"
+    command: ["npm"]
+    args: ["run","start"]
+    resources:
+      requests:
+        cpu: 0.125
+        memory: 500Mi
+      limits:
+        cpu: 0.125
+        memory: 600Mi
+    imagePullPolicy: IfNotPresent
+    name: dallincit270
+  volumes:
+  - name: ssl
+    secret: 
+      secretName: ssl.secret.dallin
+  restartPolicy: Always
